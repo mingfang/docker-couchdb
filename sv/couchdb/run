@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#sv start socklog-unix || exit 1
+
+source /etc/envvars
+
+(until curl http://localhost:5984; do echo "waiting for Couchdb to come online..."; sleep 3; done; curl -X PUT http://127.0.0.1:5984/_users; curl -X PUT http://127.0.0.1:5984/_replicator; curl -X PUT http://127.0.0.1:5984/_global_changes) &
+
+cd /couchdb
+exec 2>&1
+exec ./bin/couchdb
